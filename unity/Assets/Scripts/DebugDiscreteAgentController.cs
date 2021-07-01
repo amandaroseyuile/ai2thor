@@ -103,151 +103,59 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                 }
 
                 if (!inputField.isFocused) {
-                    bool armMode = Input.GetKey(KeyCode.LeftShift);
-                    if (!armMode) {
-                        // float FlyMagnitude = 1.0f;
-                        float WalkMagnitude = 0.25f;
-                        if (Input.GetKeyDown(KeyCode.W)) {
-                            ServerAction action = new ServerAction();
-                            // if(PhysicsController.FlightMode)
-                            // {
-                            //     action.action = "FlyAhead";
-                            //     action.moveMagnitude = FlyMagnitude;
-                            //     PhysicsController.ProcessControlCommand(action);
-                            // }
+                    bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+                    bool altHeld = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+                    bool noModifier = (!shiftHeld) && (!altHeld);
+                    bool armMoveMode = shiftHeld && !altHeld;
+                    bool armRotateMode = shiftHeld && altHeld;
 
-                            // else
-                            // {
-                            action.action = "MoveAhead";
-                            action.moveMagnitude = WalkMagnitude;
-                            PhysicsController.ProcessControlCommand(action);
-                            // }
+                    if (noModifier) {
+                        float WalkMagnitude = 0.25f;
+
+                        Dictionary<string, object> action = new Dictionary<string, object>();
+                        action["action"] = "";
+
+                        if (Input.GetKeyDown(KeyCode.W)) {
+                            action["action"] = "MoveAhead";
+                            action["moveMagnitude"] = WalkMagnitude;
                         }
 
                         if (Input.GetKeyDown(KeyCode.S)) {
-                            ServerAction action = new ServerAction();
-                            // if(PhysicsController.FlightMode)
-                            // {
-                            //     action.action = "FlyBack";
-                            //     action.moveMagnitude = FlyMagnitude;
-                            //     PhysicsController.ProcessControlCommand(action);
-                            // }
-
-                            // else
-                            // {
-                            action.action = "MoveBack";
-                            action.moveMagnitude = WalkMagnitude;
-                            PhysicsController.ProcessControlCommand(action);
-                            // }
+                            action["action"] = "MoveBack";
+                            action["moveMagnitude"] = WalkMagnitude;
                         }
 
                         if (Input.GetKeyDown(KeyCode.A)) {
-                            ServerAction action = new ServerAction();
-                            // if(PhysicsController.FlightMode)
-                            // {
-                            //     action.action = "FlyLeft";
-                            //     action.moveMagnitude = FlyMagnitude;
-                            //     PhysicsController.ProcessControlCommand(action);
-                            // }
-
-                            // else
-                            // {
-                            action.action = "MoveLeft";
-                            action.moveMagnitude = WalkMagnitude;
-                            PhysicsController.ProcessControlCommand(action);
-                            // }
+                            action["action"] = "MoveLeft";
+                            action["moveMagnitude"] = WalkMagnitude;
                         }
 
                         if (Input.GetKeyDown(KeyCode.D)) {
-                            ServerAction action = new ServerAction();
-                            // if(PhysicsController.FlightMode)
-                            // {
-                            //     action.action = "FlyRight";
-                            //     action.moveMagnitude = FlyMagnitude;
-                            //     PhysicsController.ProcessControlCommand(action);
-                            // }
-
-                            // else
-                            // {
-                            action.action = "MoveRight";
-                            action.moveMagnitude = WalkMagnitude;
-                            PhysicsController.ProcessControlCommand(action);
-                            // }
+                            action["action"] = "MoveRight";
+                            action["moveMagnitude"] = WalkMagnitude;
                         }
 
-                        // if(Input.GetKeyDown(KeyCode.I))
-                        // {
-                        //     if(PhysicsController.FlightMode)
-                        //     {
-                        //         ServerAction action = new ServerAction();
-                        //         action.action = "FlyUp";
-                        //         action.moveMagnitude = FlyMagnitude;
-                        //         PhysicsController.ProcessControlCommand(action);
-                        //     }
-                        // }
-
-                        // if(Input.GetKeyDown(KeyCode.K))
-                        // {
-                        //     if(PhysicsController.FlightMode)
-                        //     {
-                        //         ServerAction action = new ServerAction();
-                        //         action.action = "FlyDown";
-                        //         action.moveMagnitude = FlyMagnitude;
-                        //         PhysicsController.ProcessControlCommand(action);
-                        //     }
-                        // }
-
                         if (Input.GetKeyDown(KeyCode.UpArrow)) {
-                            ServerAction action = new ServerAction();
-                            action.action = "LookUp";
-                            PhysicsController.ProcessControlCommand(action);
+                            action["action"] = "LookUp";
                         }
 
                         if (Input.GetKeyDown(KeyCode.DownArrow)) {
-                            ServerAction action = new ServerAction();
-                            action.action = "LookDown";
-                            PhysicsController.ProcessControlCommand(action);
+                            action["action"] = "LookDown";
                         }
 
-                        if (Input.GetKeyDown(KeyCode.LeftArrow))//|| Input.GetKeyDown(KeyCode.J))
-                        {
-                            ServerAction action = new ServerAction();
-                            action.action = "RotateLeft";
-                            PhysicsController.ProcessControlCommand(action);
+                        if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                            action["action"] = "RotateLeft";
                         }
 
-                        if (Input.GetKeyDown(KeyCode.RightArrow))//|| Input.GetKeyDown(KeyCode.L))
-                        {
-                            ServerAction action = new ServerAction();
-                            action.action = "RotateRight";
-                            PhysicsController.ProcessControlCommand(action);
+                        if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                            action["action"] = "RotateRight";
                         }
 
-                        // if(Input.GetKeyDown(KeyCode.Space))
-                        // {
-                        //     if(PhysicsController.FlightMode)
-                        //     {
-                        //         ServerAction action = new ServerAction();
-                        //         action.action = "LaunchDroneObject";
-                        //         action.moveMagnitude = 200f;
-                        //         // action. = new Vector3(0, 1, -1);
-                        //         action.x = 0;
-                        //         action.y = 1;
-                        //         action.z = -1;
-                        //         PhysicsController.ProcessControlCommand(action);
-                        //     }
-                        // }
+                        if ((string) action["action"] != "") {
+                            this.CurrentActiveController().ProcessControlCommand(action);
+                        }
 
-                        // if(Input.GetKeyDown(KeyCode.O))
-                        // {
-                        //     if(PhysicsController.FlightMode)
-                        //     {
-                        //         ServerAction action = new ServerAction();
-                        //         action.action = "CheckDroneCaught";
-                        //         PhysicsController.ProcessControlCommand(action);
-                        //     }
-                        // }
-                    } else {
+                    } else if (armMoveMode) {
                         var actionName = "MoveArmRelative";
                         var localPos = new Vector3(0, 0, 0);
                         float ArmMoveMagnitude = 0.05f;
@@ -277,6 +185,54 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                             action["action"] = actionName;
                             if (localPos.magnitude != 0) {
                                 action["offset"] = localPos;
+                                //action["fixedDeltaTime"] = fixedDeltaTime;
+                                //action["speed"] = 0.1;
+                            }
+                            this.CurrentActiveController().ProcessControlCommand(action);
+                        }
+                    } else if (armRotateMode) {
+                        var actionName = "RotateWristRelative";
+                        float rotateMag = 30f;
+                        float pitch = 0f;
+                        float yaw = 0f;
+                        float roll = 0f;
+                        float degrees = 0f;
+
+                        if (Input.GetKeyDown(KeyCode.W)) {
+                            roll += rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.S)) {
+                            roll -= rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                            pitch += rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                            pitch -= rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                            yaw -= rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                            yaw += rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.E)) {
+                            actionName = "RotateElbowRelative";
+                            degrees += rotateMag;
+                        } else if (Input.GetKeyDown(KeyCode.Q)) {
+                            // Why Q/E rather than A/D? Because apparently
+                            // shift+alt+A is a Unity shortcut and Unity
+                            // doesn't provide the ability to disable shortcuts in
+                            // play mode despite this being a feature request since 2013.
+                            actionName = "RotateElbowRelative";
+                            degrees -= rotateMag;
+                        } else {
+                            actionName = "";
+                        }
+
+                        if (actionName != "") {
+                            Dictionary<string, object> action = new Dictionary<string, object>();
+                            action["action"] = actionName;
+                            if (actionName == "RotateWristRelative") {
+                                action["pitch"] = pitch;
+                                action["yaw"] = yaw;
+                                action["roll"] = roll;
+                            } else if (actionName == "RotateElbowRelative") {
+                                action["degrees"] = degrees;
                             }
                             this.CurrentActiveController().ProcessControlCommand(action);
                         }
