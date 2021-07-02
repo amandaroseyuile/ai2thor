@@ -252,7 +252,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                     if (fixedDeltaTime == 0f) {
                         Physics.SyncTransforms();
                     } else {
-                        Physics.Simulate(fixedDeltaTime);
+                        PhysicsSceneManager.PhysicsSimulateTHOR(fixedDeltaTime);
                     }
                 }
 
@@ -280,7 +280,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
                 if (fixedDeltaTime == 0f) {
                     Physics.SyncTransforms();
                 } else {
-                    Physics.Simulate(fixedDeltaTime);
+                    PhysicsSceneManager.PhysicsSimulateTHOR(fixedDeltaTime);
                 }
             }
         }
