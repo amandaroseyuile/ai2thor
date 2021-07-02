@@ -755,7 +755,7 @@ public class IK_Robot_Arm_Controller : MonoBehaviour {
         }
 
         meta.heldObjects = heldObjectIDs;
-        meta.handSphereCenter = transform.TransformPoint(magnetSphere.center);
+        meta.handSphereCenter = magnetSphere.transform.position;
         meta.handSphereRadius = magnetSphere.radius;
         meta.pickupableObjects = WhatObjectsAreInsideMagnetSphereAsObjectID();
         return meta;
