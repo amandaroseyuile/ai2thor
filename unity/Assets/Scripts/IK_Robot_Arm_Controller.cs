@@ -238,6 +238,11 @@ public class IK_Robot_Arm_Controller : MonoBehaviour {
         armTarget.rotation = rot;
     }
 
+
+    /*
+    See the documentation of the `MoveArmRelative` function
+    in the ArmAgentController.
+    */
     public void moveArmRelative(
         PhysicsRemoteFPSAgentController controller,
         Vector3 offset,
